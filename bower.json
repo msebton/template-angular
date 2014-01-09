@@ -1,0 +1,18 @@
+{
+    "dependencies": {},
+    "devDependencies": {
+        "angular": "~1.2.x",
+        "angular-ui": "latest",
+        "angular-ui-utils": "latest",
+        "angular-ui-ace": "latest",
+        "angular-ui-bootstrap": "latest",
+        "angular-ui-calendar": "latest",
+        "angular-ui-map": "latest",
+        "angular-ui-select2": "latest",
+        "angular-ui-sortable": "latest",
+        "angular-ui-tinymce": "latest",
+        "bootstrap": "~3.0.3"
+    },
+    "name": "",
+    "version": "0.0.1"
+}

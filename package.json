@@ -1,0 +1,42 @@
+{
+    "author": {
+        "name": "",
+        "email": ""
+    },
+    "bugs": "",
+    "dependencies": {},
+    "description": "",
+    "devDependencies": {
+        "bower": "latest",
+        "grunt": "latest",
+        "grunt-contrib-clean": "latest",
+        "grunt-contrib-concat": "latest",
+        "grunt-contrib-connect": "latest",
+        "grunt-contrib-copy": "latest",
+        "grunt-contrib-jshint": "latest",
+        "grunt-contrib-uglify": "latest",
+        "grunt-contrib-watch": "latest",
+        "grunt-ngmin": "latest",
+        "grunt-shell": "latest",
+        "grunt-recess": "latest"
+    },
+    "homepage": "",
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://raw.github.com/ericclemmons/genesis-skeleton/master/LICENSE"
+        }
+    ],
+    "name": "",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:joshdmiller/ng-boilerplate.git"
+    },
+    "scripts": {
+        "start": "",
+        "install": "bower install && grunt",
+        "test": ""
+    },
+    "title": "",
+    "version": "0.0.1"
+}
