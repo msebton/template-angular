@@ -19,7 +19,7 @@ module.exports = function (grunt) {
          * pairs are evaluated based on this very configuration object.
          */
         meta: {
-            banner: '/**\n * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n * <%= pkg.homepage %>\n *\n * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n */\n'
+            banner: '/**\n * <%= pkg.name %> - v<%= pkg.version %> - <%= grunt.template.today("yyyy-mm-dd") %>\n * <%= pkg.homepage %>\n *\n * Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>\n * Licensed <%= pkg.licenses.type %> <<%= pkg.licenses.url %>>\n */\n'
         }, // meta
 
 
@@ -221,12 +221,12 @@ module.exports = function (grunt) {
 
         dalek: {
             options: {
-                browser: ['phatnomjs'],
+                browser: ['phantomjs'],
                 reporter: ['console', 'html'],
                 dalekfile: false,
                 advanced: {
                     "html-reporter": {
-                       "dest": "test"
+                        dest: "test/reports"
                     }
                 }
             },
@@ -257,11 +257,12 @@ module.exports = function (grunt) {
             /**
              * When the CSS files change, we need to compile and minify them.
              */
+
             less: {
                 files: [
                     'app/less/*.less'
                 ],
-                tasks: ['copy', 'recess', 'shell:done']
+                tasks: [/*'copy',*/ 'recess', 'shell:done']
             },
 
             /**
@@ -272,7 +273,7 @@ module.exports = function (grunt) {
                 files: [
                     '<%= jshint.main %>'
                 ],
-                tasks: ['jshint:main', 'copy', 'concat', 'shell:done']
+                tasks: ['jshint:main', /*'copy',*/ 'concat', 'shell:done']
             }
         }, // watch
 
@@ -294,7 +295,6 @@ module.exports = function (grunt) {
         }, // connect
     });
 
-
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 
@@ -310,7 +310,7 @@ module.exports = function (grunt) {
      * Only CSS
      */
     grunt.registerTask('css', [
-        'copy',
+        // 'copy',
         'recess',
         'shell:done'
     ]);
@@ -319,7 +319,7 @@ module.exports = function (grunt) {
      * Only JS
      */
     grunt.registerTask('js', [
-        'copy',
+        // 'copy',
         'ngmin',
         'concat',
         'shell:done'
@@ -330,7 +330,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('dev', [
         'jshint',
-        'copy',
+        // 'copy',
         'recess',
         'ngmin',
         'concat',
@@ -345,7 +345,7 @@ module.exports = function (grunt) {
      */
     grunt.registerTask('default', [
         'clean',
-        'copy',
+        // 'copy',
         'recess',
         'ngmin',
         'uglify',

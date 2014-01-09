@@ -4,7 +4,7 @@ module.exports = {
         test
         .open('http://')
         .assert.url().is('http://', 'Homepage exist')
-        .screenshot('homepage_:viewport_:date.png')
+        .screenshot('homepage_:viewport.png')
         .done();
     }, // Default test
 };
