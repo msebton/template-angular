@@ -1,6 +1,8 @@
-// inspiration: https://github.com/ngbp/ngbp/blob/v0.3.1-release/Gruntfile.js
+// @notetomyself:
+// https://github.com/ngbp/ngbp/blob/v0.3.1-release/Gruntfile.js
+// https://github.com/asciidisco/grunt-imagine
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     'use strict';
 
     grunt.initConfig({
@@ -25,7 +27,7 @@ module.exports = function(grunt) {
          * The directories to delete when `grunt clean` is executed.
          */
         clean: {
-            files: [
+            build: [
                 'public/assets/css/plugins.css',
                 'public/assets/css/app.css',
 
@@ -33,6 +35,27 @@ module.exports = function(grunt) {
                 'public/assets/js/app.js'
             ]
         }, // clean
+
+
+        /**
+         * `jshint` defines the rules of our linter as well as which files we
+         * should check. This file, all javascript sources, and all our unit tests
+         * are linted based on the policies listed in `options`. But we can also
+         * specify exclusionary patterns by prefixing them with an exclamation
+         * point (!); this is useful when code comes from a third party but is
+         * nonetheless inside `src/`.
+         */
+        jshint: {
+            options: {
+                jshintrc: '.jshintrc'
+            },
+            gruntfile: ['Gruntfile.js'],
+            main: [
+                'app/angular/*.js',
+                '!public/js/*.js'
+            ],
+            globals: {}
+        }, // jshint
 
 
         /**
@@ -111,18 +134,17 @@ module.exports = function(grunt) {
          * `ng-min` annotates the sources before minifying. That is, it allows us
          * to code without the array syntax.
          */
-        // @TODO
         ngmin: {
-            // compile: {
-            //     files: [
-            //         {
-            //             src: [''],
-            //             cwd: '',
-            //             dest: '',
-            //             expand: true
-            //         }
-            //     ]
-            // }
+            main: {
+                files: [
+                    {
+                        cwd: 'app/angular',
+                        src: ['*.js'],
+                        expand: true,
+                        dest: 'app/angular/app-generated.js'
+                    }
+                ]
+            } // main
         }, // ngmin
 
 
@@ -131,9 +153,6 @@ module.exports = function(grunt) {
          */
         uglify: {
             plugins: {
-                options: {
-                    banner: ''
-                },
                 files: {
                     'public/js/plugins.js': [
                         'public/packages/jquery/jquery.js',
@@ -150,6 +169,7 @@ module.exports = function(grunt) {
                 options: {
                     banner: '<%= meta.banner %>\n\n(function (window, angular, undefined) {',
                     footer: '}) (window, window.angular);',
+                    report: 'min'
                 },
                 files: {
                     'public/js/app.js': [
@@ -199,66 +219,61 @@ module.exports = function(grunt) {
         }, // recess
 
 
-        /**
-         * `jshint` defines the rules of our linter as well as which files we
-         * should check. This file, all javascript sources, and all our unit tests
-         * are linted based on the policies listed in `options`. But we can also
-         * specify exclusionary patterns by prefixing them with an exclamation
-         * point (!); this is useful when code comes from a third party but is
-         * nonetheless inside `src/`.
-         */
-        jshint: {
+        dalek: {
             options: {
-                jshintrc: '.jshintrc'
+                browser: ['phatnomjs'],
+                reporter: ['console', 'html'],
+                dalekfile: false,
+                advanced: {
+                    "html-reporter": {
+                       "dest": "test"
+                    }
+                }
             },
-            all: [
-                'Gruntfile.js',
-                'app/angular/*.js',
-                'app/js/*.js',
-                '!public/js/*.js'
-            ],
-            globals: {}
-        }, // jshint
+
+            main: {
+                src: ['test/test-*.js']
+            }
+        }, // dalek
 
 
-        // @TODO
         watch: {
-            // options: {
-            //     livereload: true
-            // },
+            options: {
+                livereload: true
+            },
 
             /**
              * When the Gruntfile changes, we just want to lint it. In fact, when
              * your Gruntfile changes, it will automatically be reloaded!
              */
-            // gruntfile: {
-            //     files: 'Gruntfile.js',
-            //     tasks: [ 'jshint:gruntfile' ],
-            //     options: {
-            //         livereload: false
-            //     }
-            // },
+            gruntfile: {
+                files: 'Gruntfile.js',
+                tasks: ['jshint:gruntfile', 'shell:done'],
+                options: {
+                    livereload: false
+                }
+            }, // gruntfile
 
             /**
              * When the CSS files change, we need to compile and minify them.
              */
-            // less: {
-            //     files: [
-            //         'app/less/*.less'
-            //     ],
-            //     tasks: ['recess', 'shell:done']
-            // },
+            less: {
+                files: [
+                    'app/less/*.less'
+                ],
+                tasks: ['copy', 'recess', 'shell:done']
+            },
 
             /**
-             * When our JavaScript source files change, we want to run lint them and
-             * run our unit tests.
+             * When our JavaScript source files change.
+             * In dev, we only concat files.
              */
-            // js: {
-            //     files: [
-            //         '<%= jshint.all %>'
-            //     ],
-            //     tasks: [/*'jshint',*/ 'uglify', 'shell:done']
-            // }
+            js: {
+                files: [
+                    '<%= jshint.main %>'
+                ],
+                tasks: ['jshint:main', 'copy', 'concat', 'shell:done']
+            }
         }, // watch
 
 
@@ -279,53 +294,68 @@ module.exports = function(grunt) {
         }, // connect
     });
 
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-ngmin');
-    grunt.loadNpmTasks('grunt-recess');
-    grunt.loadNpmTasks('grunt-shell');
 
-    // @TODO
-    // grunt.event.on('watch', function(action, filepath, target) {
-    //     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
-    // });
+    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
 
-    // // -- Tasks
+    // -- Tasks
 
-    // grunt.registerTask('before-test', [
-    //     'clean'
-    // ]);
-    // grunt.registerTask('test', [
-    //     'recess',
-    //     'concat'
-    // ]);
-    // grunt.registerTask('prod', [
-    //     'recess',
-    //     'uglify'
-    // ]);
-    // grunt.registerTask('after-test', [
-    //     'shell:done'
-    // ]);
 
-    // grunt.registerTask('js', [
-    //     'concat',
-    //     'shell:done'
-    // ]);
-    // grunt.registerTask('css', [
-    //     'recess',
-    //     'shell:done'
-    // ]);
+    /**
+     * Only tests
+     */
+    grunt.registerTask('test', ['dalek']);
 
-    // grunt.registerTask('dev', [
-    //     'connect',
-    //     'watch'
-    // ]);
+    /**
+     * Only CSS
+     */
+    grunt.registerTask('css', [
+        'copy',
+        'recess',
+        'shell:done'
+    ]);
 
-    // grunt.registerTask('default', ['before-test', 'prod', 'after-test']);
+    /**
+     * Only JS
+     */
+    grunt.registerTask('js', [
+        'copy',
+        'ngmin',
+        'concat',
+        'shell:done'
+    ]);
+
+    /**
+     * Dev is the regular watch tasks
+     */
+    grunt.registerTask('dev', [
+        'jshint',
+        'copy',
+        'recess',
+        'ngmin',
+        'concat',
+        'shell:done',
+
+        'connect',
+        'watch'
+    ]);
+
+    /**
+     * The default task is to build and compile.
+     */
+    grunt.registerTask('default', [
+        'clean',
+        'copy',
+        'recess',
+        'ngmin',
+        'uglify',
+        'dalek',
+        'shell:done'
+    ]);
+
+
+    grunt.event.on('watch', function (action, filepath, target) {
+        grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+    });
+
 };

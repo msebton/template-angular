@@ -1,4 +1,4 @@
-template-angular
-================
+# template-angular
 
-Simple folder structure to work with angular.
+Simple folder structure to work with AngularJS, Laravel "friendly". :-)
+

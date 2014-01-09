@@ -1,4 +1,6 @@
 {
+    "name": "",
+    "version": "0.0.1",
     "dependencies": {},
     "devDependencies": {
         "angular": "~1.2.x",
@@ -12,7 +14,5 @@
         "angular-ui-sortable": "latest",
         "angular-ui-tinymce": "latest",
         "bootstrap": "~3.0.3"
-    },
-    "name": "",
-    "version": "0.0.1"
+    }
 }
