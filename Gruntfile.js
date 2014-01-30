@@ -27,9 +27,12 @@ module.exports = function (grunt) {
          * The directories to delete when `grunt clean` is executed.
          */
         clean: {
-            build: [
+            css: [
                 'public/assets/css/plugins.css',
                 'public/assets/css/app.css',
+            ],
+            js: [
+                'app/angular/app-generated.js',
 
                 'public/assets/js/plugins.js',
                 'public/assets/js/app.js'
@@ -52,9 +55,12 @@ module.exports = function (grunt) {
             gruntfile: ['Gruntfile.js'],
             main: [
                 'app/angular/*.js',
+                '!app/angular/*-combined.js',
                 '!public/js/*.js'
             ],
-            globals: {}
+            globals: {
+                angular: false
+            }
         }, // jshint
 
 
@@ -114,16 +120,16 @@ module.exports = function (grunt) {
 
             main: {
                 options: {
-                    banner: '<?= meta.banner %>\n\n(function (window, angular, undefined) {',
+                    banner: '<%= meta.banner %>\n\n(function (window, angular, undefined) {',
                     footer: '}) (window, window.angular);'
                 },
                 src: [
+                    'app/angular/app.js',
                     'app/angular/services.js',
                     'app/angular/controllers.js',
                     'app/angular/filters.js',
                     'app/angular/models.js',
                     'app/angular/directives.js',
-                    'app/angular/app.js'
                 ],
                 dest: 'public/js/app.js'
             } // main
@@ -173,12 +179,12 @@ module.exports = function (grunt) {
                 },
                 files: {
                     'public/js/app.js': [
+                        'app/angular/app.js',
                         'app/angular/services.js',
                         'app/angular/controllers.js',
                         'app/angular/filters.js',
                         'app/angular/models.js',
                         'app/angular/directives.js',
-                        'app/angular/app.js',
                     ]
                 }
             } // main
@@ -225,14 +231,14 @@ module.exports = function (grunt) {
                 reporter: ['console', 'html'],
                 dalekfile: false,
                 advanced: {
-                    "html-reporter": {
-                        dest: "test/reports"
+                    'html-reporter': {
+                        dest: 'tests/reports'
                     }
                 }
             },
 
             main: {
-                src: ['test/test-*.js']
+                src: ['tests/test-*.js']
             }
         }, // dalek
 
@@ -310,6 +316,7 @@ module.exports = function (grunt) {
      * Only CSS
      */
     grunt.registerTask('css', [
+        'clean:css',
         // 'copy',
         'recess',
         'shell:done'
@@ -319,6 +326,7 @@ module.exports = function (grunt) {
      * Only JS
      */
     grunt.registerTask('js', [
+        'clean:js',
         // 'copy',
         'ngmin',
         'concat',
@@ -329,6 +337,7 @@ module.exports = function (grunt) {
      * Dev is the regular watch tasks
      */
     grunt.registerTask('dev', [
+        'clean',
         'jshint',
         // 'copy',
         'recess',
